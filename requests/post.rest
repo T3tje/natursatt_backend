@@ -1,0 +1,12 @@
+POST http://localhost:3001/api/food/
+Content-Type: application/json
+
+{
+    "name": "Kürbiskerne",
+    "kh":54,
+    "ew":19,
+    "fett":19,
+    "zucker":0, 
+    "ballast": 18,
+    "kcal":446
+}

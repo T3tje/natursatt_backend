@@ -2,17 +2,15 @@ const foodRouter = require("express").Router()
 const Food = require("../models/food")
 
 foodRouter.get("/:name", async (request, response) => {
-   console.log(request.params.name)
-   const result = await Food.find({name: { $regex: request.params.name, $options: 'i' }})
-   console.log(result)
+   const result = await Food.find({name: { $regex: request.params.name, $options: "i" }})
    response.json(result)
 })
 
-      foodRouter.post("/", async (request, response) => {
+foodRouter.post("/", async (request, response) => {
    const body = request.body
 
    const resultNumber = ((body.ew/body.kcal)*54+(body.ballast/body.kcal)*39)*10+(100/body.kcal)*16-((body.fett/body.kcal)*600)-(body.zucker/body.kcal)*160 
-   var rounded = Math.round((resultNumber + Number.EPSILON) * 100) / 100;
+   var rounded = Math.round((resultNumber + Number.EPSILON) * 100) / 100
    let result = ""
    
    if (rounded >= 39) {
@@ -41,12 +39,17 @@ foodRouter.get("/:name", async (request, response) => {
       zucker: body.zucker,
       kcal: body.kcal,
       likes: 0,
-      rate: result
+      rate: result,
+      barcode: body.barcode,
+      zusatzstoffe: body.zusatzstoffe,
+      date: body.date,
+      marke: body.marke
    })
 
-   const savedFood = await food.save()
+   const newFood = await food.save()
    response.status(200)
-   response.json(savedFood)
+   response.json(newFood)
+   
 })
 
 module.exports = foodRouter

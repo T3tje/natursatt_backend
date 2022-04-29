@@ -3,11 +3,13 @@ Content-Type: application/json
 
 {
     "name": "Tofu natur",
+    "marke": "Laslow GbmH",
     "kh":1,
     "fett":7,
     "ew":14,
     "ballast": 1,
     "kcal":127,
     "zucker":0.5, 
-    "zusatzstoffe": false
+    "zusatzstoffe": false,
+    
 }

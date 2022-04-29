@@ -2,18 +2,24 @@ const mongoose = require("mongoose")
 
 const foodSchema = new mongoose.Schema({
    name: {type: String, required: true, unique:true },
+   marke: {type: String, required: false},
    kh: {type: Number, required: true},
    ew: {type: Number, required: true},
    fett: {type: Number, required: true},
-   ballast: {type: Number, required: true},
+   ballast: {type: Number, required: false},
    zucker: {type: Number, required: true},
    rate: {type: String, required: true},
    likes: {type: Number, required: false},
    kcal: {type: Number, required: true},
    barcode: {type: Number, required: false},
-   picLink: {type: String, required: false},
-   zusatzstoffe: {type: Boolean, required: false },
-   affiLink: {type: String, required: false}
+   zusatzstoffe: {type: Boolean, required: false},
+   affiLink: {type: String, required: false},
+   date: {type: Object},
+   user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+   },
+
 })
 
 foodSchema.set("toJSON", {
@@ -21,6 +27,7 @@ foodSchema.set("toJSON", {
       returnedObject.id = returnedObject._id.toString()
       delete returnedObject._id
       delete returnedObject.__v
+      delete returnedObject.id
    }
 })
 

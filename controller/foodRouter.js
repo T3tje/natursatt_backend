@@ -2,8 +2,30 @@ const foodRouter = require("express").Router()
 const Food = require("../models/food")
 
 foodRouter.get("/:name", async (request, response) => {
-   const result = await Food.find({name: { $regex: request.params.name, $options: "i" }})
+   
+   let nameAndNumber = request.params.name
+
+   const position = nameAndNumber.indexOf("~")
+
+   const strToArray = nameAndNumber.split("")
+
+   const nameArr = strToArray.slice(0, position)
+  
+   const amount = parseInt(strToArray.slice(position+1).join(""))
+
+   const name = nameArr.join("")
+  
+   console.log(name)
+
+   const result = await Food
+      .find({name: { $regex: name, $options: "i" }})
+      .sort({name: "asc"})
+      .skip(amount)
+      .limit(10)
+
    response.json(result)
+
+   console.log(result)
 })
 
 foodRouter.post("/", async (request, response) => {

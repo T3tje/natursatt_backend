@@ -14,6 +14,7 @@ const foodSchema = new mongoose.Schema({
    barcode: {type: Number, required: false},
    zusatzstoffe: {type: Boolean, required: false},
    affiLink: {type: String, required: false},
+   addAmount: {type: Number, required: false},
    date: {type: Object},
    user: {
       type: mongoose.Schema.Types.ObjectId,

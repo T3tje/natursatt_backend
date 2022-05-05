@@ -62,6 +62,7 @@ foodRouter.post("/", async (request, response) => {
       kcal: body.kcal,
       likes: 0,
       rate: result,
+      addAmount:0,
       barcode: body.barcode,
       zusatzstoffe: body.zusatzstoffe,
       date: body.date,

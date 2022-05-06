@@ -1,6 +1,11 @@
 const foodRouter = require("express").Router()
 const Food = require("../models/food")
 
+foodRouter.get("/", async (request, response) => {
+   const result = await Food.find({})
+   response.json(result)
+})
+
 foodRouter.get("/:name", async (request, response) => {
    
    let nameAndNumber = request.params.name

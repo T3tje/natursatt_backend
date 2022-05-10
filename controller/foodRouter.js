@@ -1,5 +1,15 @@
 const foodRouter = require("express").Router()
 const Food = require("../models/food")
+const User = require("../models/user")
+const jwt = require("jsonwebtoken")
+
+const getTokenFrom = request => {
+   const authorization = request.get("authorization")
+   if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
+      return authorization.substring(7)
+   }
+   return null
+}
 
 foodRouter.get("/", async (request, response) => {
    const result = await Food.find({})
@@ -35,6 +45,17 @@ foodRouter.get("/:name", async (request, response) => {
 
 foodRouter.post("/", async (request, response) => {
    const body = request.body
+   const name = body.name
+
+   const token = getTokenFrom(request)
+   const decodedToken = jwt.verify(token, process.env.SECRET)
+   if(!decodedToken.id) {
+      return response.status(401).json({ error: "token missing or invalid"})
+   }
+
+   const user = await User.findById(decodedToken.id)
+
+   
 
    const resultNumber = ((body.ew/body.kcal)*54+(body.ballast/body.kcal)*39)*10+(100/body.kcal)*16-((body.fett/body.kcal)*600)-(body.zucker/body.kcal)*160 
    var rounded = Math.round((resultNumber + Number.EPSILON) * 100) / 100
@@ -71,11 +92,22 @@ foodRouter.post("/", async (request, response) => {
       barcode: body.barcode,
       zusatzstoffe: body.zusatzstoffe,
       date: body.date,
-      marke: body.marke
+      marke: body.marke,
+      veggie: body.veggie,
+      user: user._id
    })
 
+   const existingFood = await Food.findOne({ name })
+
+   if (existingFood) {
+      return response.status(400).json({
+         error: "Das Lebensmittel ist bereits in der Datenbank enthalten"
+      })
+   }
    const newFood = await food.save()
-   response.status(200)
+   user.foodsAdded = user.foodsAdded.concat(newFood._id)
+   await user.save()
+   response.status(201)
    response.json(newFood)
    
 })

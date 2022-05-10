@@ -1,4 +1,5 @@
 
+const Food = require("../models/food")
 const User = require("../models/user")
 
 const reverse = (string) => {
@@ -24,9 +25,14 @@ const usersInDb = async () => {
    return users.map(u => u.toJSON())
 }
  
+const foodsInDb = async () => {
+   const food = await Food.find({})
+   return food.map(f => f.toJSON())
+}
  
 module.exports = {
    reverse,
    average,
-   usersInDb
+   usersInDb,
+   foodsInDb
 }

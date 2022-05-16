@@ -11,7 +11,6 @@ describe("when there is initially one user in db", () => {
  
       const passwordHash = await bcrypt.hash("T3stpassword!", 10)
       const user = new User({ 
-         username: "root", 
          name: "Tilman",
          passwordHash,
          email: "tilman2013@gmail.com"
@@ -20,15 +19,15 @@ describe("when there is initially one user in db", () => {
       await user.save()
    }, 10000)
  
-   test("creation succeeds with a fresh username", async () => {
+   test("creation succeeds with a fresh user", async () => {
       const usersAtStart = await helper.usersInDb()
 
       const newUser = {
-         username: "mrm1ster",
          name: "Tetje",
-         password: "T3stpasswort!",
+         password: "anotherPasw4ord!",
          email:"tilman2013@googlemail.com"
       }
+     
       
       await api
          .post("/api/users")
@@ -39,39 +38,17 @@ describe("when there is initially one user in db", () => {
       const usersAtEnd = await helper.usersInDb()
       expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
  
-      const usernames = usersAtEnd.map(u => u.username)
-      expect(usernames).toContain(newUser.username)
-   }, 100000)
+      const emails = usersAtEnd.map(u => u.email)
+      expect(emails).toContain(newUser.email)
+   }, 10000)
  
-   test("creation fails with proper statuscode and message if username already taken", async () => {
-      
-      const usersAtStart = await helper.usersInDb()
-  
-      const newUser = {
-         username: "root",
-         name: "Superuser",
-         password: "T3stpasswo0rt",
-         email:"salainen@googlemail.com"
-      }
-  
-      const result = await api
-         .post("/api/users")
-         .send(newUser)
-         .expect(400)
-         .expect("Content-Type", /application\/json/)
-  
-      expect(result.body.error).toContain("Benutzername bereits vergeben")
-  
-      const usersAtEnd = await helper.usersInDb()
-      expect(usersAtEnd).toEqual(usersAtStart)
-   })
 
    test("creation fails with a proper statuscode and message email is already in use", async () => {
       
       const usersAtStart = await helper.usersInDb()
 
       const newUser = {
-         username: "root3",
+         
          name: "Superuser",
          password: "T3stpassworrt",
          email:"tilman2013@gmail.com"
@@ -83,23 +60,20 @@ describe("when there is initially one user in db", () => {
          .expect(400)
          .expect("Content-Type", /application\/json/)
 
-      expect(result.body.error).toContain("E-Mail Adresse bereits vergeben")
+      expect(result.body.error).toContain("E-Mail wird bereits verwendet")
 
       const usersAtEnd = await helper.usersInDb()
       expect(usersAtEnd).toEqual(usersAtStart)
    })
-
-    
 
    test("PASSWORD TO SHORT", async () => {
       
       const usersAtStart = await helper.usersInDb()
 
       const newUser = {
-         username: "root4",
          name: "viererMax",
          password: "sala!N3",
-         email:"tilman2012@gmail.com"
+         email:"tilmasdasdan2012@gmail.com"
       }
 
       const result = await api
@@ -119,10 +93,9 @@ describe("when there is initially one user in db", () => {
       const usersAtStart = await helper.usersInDb()
 
       const newUser = {
-         username: "root5",
          name: "5Max",
          password: "salasN3123f",
-         email:"tilman2011@gmail.com"
+         email:"tilmasdan2011@gmail.com"
       }
 
       const result = await api
@@ -142,10 +115,10 @@ describe("when there is initially one user in db", () => {
       const usersAtStart = await helper.usersInDb()
 
       const newUser = {
-         username: "root6",
+      
          name: "6Max",
          password: "sala!d3123f",
-         email:"tilman2010@gmail.com"
+         email:"tilsmans2010@gmail.com"
       }
 
       const result = await api
@@ -165,10 +138,10 @@ describe("when there is initially one user in db", () => {
       const usersAtStart = await helper.usersInDb()
 
       const newUser = {
-         username: "root8",
+         
          name: "8Max",
          password: "sala!dsSdf",
-         email:"tilman2090@gmail.com"
+         email:"tilmsan2090@gmail.com"
       }
 
       const result = await api
@@ -183,15 +156,15 @@ describe("when there is initially one user in db", () => {
       expect(usersAtEnd).toEqual(usersAtStart)
    })
 
-   test("PASSWORD EXAKT", async () => {
+   test("PASSWORD EXAKT works", async () => {
       
       const usersAtStart = await helper.usersInDb()
 
       const newUser = {
-         username: "root6",
+   
          name: "6Max",
          password: "s!lasN3123f",
-         email:"tilman2021@gmail.com"
+         email:"tilmasdasdasan2021@gmail.com"
       }
 
       await api
@@ -203,8 +176,24 @@ describe("when there is initially one user in db", () => {
       const usersAtEnd = await helper.usersInDb()
       expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
  
-      const usernames = usersAtEnd.map(u => u.username)
-      expect(usernames).toContain(newUser.username)
+      const emails = usersAtEnd.map(u => u.email)
+      expect(emails).toContain(newUser.email)
    })
 
+   test("LOGIN IS FOLLOWED BY GETTING A TOKEN", async () => {
+
+      const newUser = {
+         email: "tilman2013@gmail.com",
+         password: "T3stpassword!",
+      }
+
+      const result = await api
+         .post("/api/login")
+         .send(newUser)
+         .expect(200)
+         .expect("Content-Type", /application\/json/)
+
+      
+      expect(result.body.token).not.toBe(undefined)
+   })
 })

@@ -2,9 +2,8 @@ POST http://localhost:3001/api/users/
 Content-Type: application/json
 
 {
-    "username": "misTa",
     "name": "Tetje",
-    "email": "tilman2013@gmail.com",
+    "email": "tilman@natursatt.de",
     "password": "K4k4k4n4k!"
     
 }

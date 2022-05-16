@@ -8,27 +8,19 @@ userRouter.get("/", async (request, response) => {
 })
 
 userRouter.post("/", async (request, response) => {
-   const { username, name, password, email } = request.body
+   const { name, password, email } = request.body
    
    //eslint-disable-next-line
     const strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")
 
-   const existingUserName = await User.findOne({ username })
+   const existingUserEmail = await User.findOne({ email })
 
-   if (existingUserName) {
+   if (existingUserEmail) {
       return response.status(400).json({
-         error: "Benutzername bereits vergeben"
+         error: "E-Mail wird bereits verwendet"
       })
    }
 
-   const existingEmail = await User.findOne({ email })
-
-   if (existingEmail) {
-      return response.status(400).json({
-         error: "E-Mail Adresse bereits vergeben"
-      })
-   }
-  
    if (strongRegex.test(password) === false) {
       return response.status(400).json({
          error: "Das Passwort (mindestens 8 Zeichen lang) sollte enthalten: Einen Großbuchstaben, ein Sonderzeichen (!@#$%^&*), eine Zahl."
@@ -38,13 +30,14 @@ userRouter.post("/", async (request, response) => {
    const passwordHash = await bcrypt.hash(password, saltRounds)
 
    const user = new User({
-      username,
       name,
       passwordHash,
       email
    })
+
    const savedUser = await user.save()
 
+   
    response.status(201).json(savedUser)
 })
 

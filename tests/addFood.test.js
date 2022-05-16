@@ -3,9 +3,25 @@ const helper = require("../utils/for_testing")
 const supertest = require("supertest")
 const app = require("../app")
 const api = supertest(app)
+const bcrypt = require("bcrypt")
+const User = require("../models/user")
 
-describe("when there is initially one food in db", () => {
+let token = ""
+
+describe("when there is initially one food and user in db", () => {
    beforeEach(async () => {
+
+      await User.deleteMany({})
+      const testPassword = "T3stpassword!"
+      const passwordHash = await bcrypt.hash(testPassword, 10)
+      const user = new User({ 
+         name: "Tilman",
+         passwordHash,
+         email: "tilman2013@gmail.com"
+      })
+ 
+      await user.save()
+
       await Food.deleteMany({})
       
       const food = new Food({
@@ -25,29 +41,23 @@ describe("when there is initially one food in db", () => {
          veggie: 100
       })
 
-      const resultNumber = ((food.ew/food.kcal)*54+(food.ballast/food.kcal)*39)*10+(100/food.kcal)*16-((food.fett/food.kcal)*600)-(food.zucker/food.kcal)*160 
-      var rounded = Math.round((resultNumber + Number.EPSILON) * 100) / 100
-      let rateResult = ""
-      
-      if (rounded >= 39) {
-         rateResult = "a"
-      }
-   
-      if (rounded > 25 && rounded < 39) {
-         rateResult = "b"
-      }
-   
-      if (rounded <= 25 && rounded >= 10) {
-         rateResult = "c"
-      }
-   
-      if (rounded < 10) {
-         rateResult = "d"
-      }
-
-      food.rate = rateResult
+      food.rate = helper.getRate(food)
  
       await food.save()
+
+      const loginUser = {
+         email: user.email,
+         password: testPassword
+      }
+
+      const result = await api   
+         .post("/api/login")
+         .send(loginUser)
+         .expect(200)
+         .expect("Content-Type", /application\/json/)
+      
+      token = `bearer ${result.body.token}`
+
    }, 10000)
  
    test("creation succeeds with a fresh food", async () => {
@@ -70,32 +80,11 @@ describe("when there is initially one food in db", () => {
          veggie: 50
       }
 
-      const resultNumber = ((newFood.ew/newFood.kcal)*54+(newFood.ballast/newFood.kcal)*39)*10+(100/newFood.kcal)*16-((newFood.fett/newFood.kcal)*600)-(newFood.zucker/newFood.kcal)*160 
-      var rounded = Math.round((resultNumber + Number.EPSILON) * 100) / 100
-      let rateResult = ""
-      
-      if (rounded >= 39) {
-         rateResult = "a"
-      }
-   
-      if (rounded > 25 && rounded < 39) {
-         rateResult = "b"
-      }
-   
-      if (rounded <= 25 && rounded >= 10) {
-         rateResult = "c"
-      }
-   
-      if (rounded < 10) {
-         rateResult = "d"
-      }
+      newFood.rate = helper.getRate(newFood)
 
-      newFood.rate = rateResult
-
-      console.log(newFood)
-      
       await api
          .post("/api/food")
+         .set("Authorization", token)
          .send(newFood)
          .expect(201)
          .expect("Content-Type", /application\/json/)
@@ -127,31 +116,11 @@ describe("when there is initially one food in db", () => {
          veggie: 100
       }
 
-      const resultNumber = ((food.ew/food.kcal)*54+(food.ballast/food.kcal)*39)*10+(100/food.kcal)*16-((food.fett/food.kcal)*600)-(food.zucker/food.kcal)*160 
-      var rounded = Math.round((resultNumber + Number.EPSILON) * 100) / 100
-      let rateResult = ""
-      
-      if (rounded >= 39) {
-         rateResult = "a"
-      }
-   
-      if (rounded > 25 && rounded < 39) {
-         rateResult = "b"
-      }
-   
-      if (rounded <= 25 && rounded >= 10) {
-         rateResult = "c"
-      }
-   
-      if (rounded < 10) {
-         rateResult = "d"
-      }
-
-      food.rate = rateResult
-      
+      food.rate = helper.getRate(food)
 
       const result = await api
          .post("/api/food")
+         .set("Authorization", token)
          .send(food)
          .expect(400)
          .expect("Content-Type", /application\/json/)

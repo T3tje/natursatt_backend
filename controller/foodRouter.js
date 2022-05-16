@@ -50,7 +50,7 @@ foodRouter.post("/", async (request, response) => {
    const token = getTokenFrom(request)
    const decodedToken = jwt.verify(token, process.env.SECRET)
    if(!decodedToken.id) {
-      return response.status(401).json({ error: "token missing or invalid"})
+      return response.status(401).json({ error: "bitte neu einloggen"})
    }
 
    const user = await User.findById(decodedToken.id)
@@ -101,7 +101,7 @@ foodRouter.post("/", async (request, response) => {
 
    if (existingFood) {
       return response.status(400).json({
-         error: "Das Lebensmittel ist bereits in der Datenbank enthalten"
+         error: "Lebensmittel bereits vorhanden"
       })
    }
    const newFood = await food.save()

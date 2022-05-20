@@ -1,20 +1,9 @@
 const foodRouter = require("express").Router()
 const Food = require("../models/food")
 const User = require("../models/user")
-const jwt = require("jsonwebtoken")
+const middleware = require("../utils/middleware")
+const helper = require("../utils/for_testing")
 
-const getTokenFrom = request => {
-   const authorization = request.get("authorization")
-   if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
-      return authorization.substring(7)
-   }
-   return null
-}
-
-foodRouter.get("/", async (request, response) => {
-   const result = await Food.find({})
-   response.json(result)
-})
 
 foodRouter.get("/:name", async (request, response) => {
    
@@ -43,40 +32,13 @@ foodRouter.get("/:name", async (request, response) => {
    console.log(result)
 })
 
-foodRouter.post("/", async (request, response) => {
+foodRouter.post("/", middleware.isAuth, async (request, response) => {
+   
    const body = request.body
-   const name = body.name
+   const userId = request.user.id
+   const user_Id = request.user._id
 
-   const token = getTokenFrom(request)
-   const decodedToken = jwt.verify(token, process.env.SECRET)
-   if(!decodedToken.id) {
-      return response.status(401).json({ error: "bitte neu einloggen"})
-   }
-
-   const user = await User.findById(decodedToken.id)
-
-   
-
-   const resultNumber = ((body.ew/body.kcal)*54+(body.ballast/body.kcal)*39)*10+(100/body.kcal)*16-((body.fett/body.kcal)*600)-(body.zucker/body.kcal)*160 
-   var rounded = Math.round((resultNumber + Number.EPSILON) * 100) / 100
-   let result = ""
-   
-   if (rounded >= 39) {
-      result = "a"
-   }
-
-   if (rounded > 25 && rounded < 39) {
-      result = "b"
-   }
-
-   if (rounded <= 25 && rounded >= 10) {
-      result = "c"
-   }
-
-   if (rounded < 10) {
-      result = "d"
-   }
-   
+   console.log("userId Test", userId)
 
    const food = new Food({
       name: body.name,
@@ -87,16 +49,17 @@ foodRouter.post("/", async (request, response) => {
       zucker: body.zucker,
       kcal: body.kcal,
       likes: 0,
-      rate: result,
+      rate: helper.getRate(body),
       addAmount:0,
       barcode: body.barcode,
       zusatzstoffe: body.zusatzstoffe,
       date: body.date,
       marke: body.marke,
       veggie: body.veggie,
-      user: user._id
+      user: userId
    })
 
+   const name = body.name
    const existingFood = await Food.findOne({ name })
 
    if (existingFood) {
@@ -104,8 +67,15 @@ foodRouter.post("/", async (request, response) => {
          error: "Lebensmittel bereits vorhanden"
       })
    }
+
+   console.log("food", food)
    const newFood = await food.save()
+
+   const user = await User.findById({ user_Id })
+
+   console.log("user", user)
    user.foodsAdded = user.foodsAdded.concat(newFood._id)
+
    await user.save()
    response.status(201)
    response.json(newFood)

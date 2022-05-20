@@ -1,3 +1,4 @@
+const { errorMonitor } = require("connect-mongo")
 const logger = require("./logger")
 
 const requestLogger = (request, response, next) => {
@@ -10,6 +11,14 @@ const requestLogger = (request, response, next) => {
 
 const unknownEndpoint = (request, response) => {
    response.status(404).send({ error: "unknown endpoint" })
+}
+
+const isAuth = (request, response, next) => {
+   if (request.isAuthenticated) {
+      next()
+   } else {
+      response.status(401).json({ error: "nicht authorisiert, bitte neu einloggen"})
+   }
 }
 
 const errorHandler = (error, request, response, next) => {
@@ -39,6 +48,7 @@ const errorHandler = (error, request, response, next) => {
 module.exports = {
    requestLogger,
    unknownEndpoint,
-   errorHandler
+   errorHandler,
+   isAuth
 }
 

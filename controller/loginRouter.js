@@ -1,9 +1,15 @@
-const jwt = require("jsonwebtoken")
-const bcrypt = require("bcrypt")
+// const jwt = require("jsonwebtoken")
+// const bcrypt = require("bcrypt")
 const loginRouter = require("express").Router()
-const User = require("../models/user")
+const passport = require("passport")
 
-loginRouter.post("/", async (request, response) => {
+
+loginRouter.post("/", passport.authenticate("local"), async (request, response) => {
+   
+   response.status(200).send(request.user.name)
+})
+
+/* loginRouter.post("/", async (request, response) => {
    const { email, password } = request.body
 
    const user = await User.findOne({ email })
@@ -31,6 +37,6 @@ loginRouter.post("/", async (request, response) => {
    response
       .status(200)
       .send({ token, email: user.email, name: user.name })
-})
+}) */
 
 module.exports = loginRouter

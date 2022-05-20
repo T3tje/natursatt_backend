@@ -1,7 +1,7 @@
 {
   "name": "natursatt_backend",
-  "version": "0.0.6",
-  "description": "\"Fett wegfressen\"",
+  "version": "0.0.7",
+  "description": "\"einfach abnehmen\"",
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=production node index.js",
@@ -13,12 +13,16 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "connect-mongo": "^4.6.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "express-async-errors": "^3.1.1",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.2.4"
+    "express-session": "^1.17.3",
+    "mongoose": "^6.2.4",
+    "passport": "^0.5.3",
+    "passport-local": "^1.0.0",
+    "sib-api-v3-sdk": "^8.3.0"
   },
   "devDependencies": {
     "eslint": "^8.14.0",

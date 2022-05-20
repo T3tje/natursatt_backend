@@ -4,12 +4,17 @@ const middleware = require("./utils/middleware")
 require("express-async-errors")
 const app = express()
 const foodRouter = require("./controller/foodRouter")
-const userRouter = require("./controller/userRouter.js")
+const userRouter = require("./controller/userRouter")
 const loginRouter = require("./controller/loginRouter")
+const logoutRouter = require("./controller/logoutRouter")
+const startRouter = require("./controller/startRouter")
 const mongoose = require("mongoose")
 const cors = require("cors")
 const logger = require("./utils/logger")
-
+const sendInBlue = require("./utils/sendinblue")
+const session = require("express-session")
+const passport = require("passport")
+require("./utils/passport")
 
 logger.info("connecting to MongoDB")
 mongoose.connect(config.MONGODB_URI)
@@ -20,13 +25,29 @@ mongoose.connect(config.MONGODB_URI)
       logger.error("error connecting to MongoDB", error.message)
    })
 
+
 app.use(cors())
 app.use(express.static("build"))
 app.use(express.json())
+app.use(express.urlencoded({extended: true}))
 app.use(middleware.requestLogger)
+
+app.use(session(config.SESSION_OBJ))
+app.use(passport.initialize())
+app.use(passport.session())
+
+app.use((request, response, next) => {
+   console.log("request.session", request.session)
+   console.log("request.user", request.user)
+   next()
+})
+
+app.use("/api/checkauth", startRouter)
 app.use("/api/food", foodRouter)
 app.use("/api/users", userRouter)
 app.use("/api/login", loginRouter)
+app.use("/api/logout", logoutRouter)
+
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

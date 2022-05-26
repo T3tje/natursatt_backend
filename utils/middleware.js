@@ -1,4 +1,3 @@
-const { errorMonitor } = require("connect-mongo")
 const logger = require("./logger")
 
 const requestLogger = (request, response, next) => {

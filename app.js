@@ -36,11 +36,12 @@ app.use(session(config.SESSION_OBJ))
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.use((request, response, next) => {
+/* app.use((request, response, next) => {
    console.log("request.session", request.session)
    console.log("request.user", request.user)
    next()
-})
+}) */
+
 
 app.use("/api/checkauth", startRouter)
 app.use("/api/food", foodRouter)

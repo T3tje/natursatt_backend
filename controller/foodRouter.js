@@ -18,8 +18,6 @@ foodRouter.get("/:name", async (request, response) => {
    const amount = parseInt(strToArray.slice(position+1).join(""))
 
    const name = nameArr.join("")
-  
-   console.log(name)
 
    const result = await Food
       .find({name: { $regex: name, $options: "i" }})
@@ -28,8 +26,6 @@ foodRouter.get("/:name", async (request, response) => {
       .limit(10)
 
    response.json(result)
-
-   console.log(result)
 })
 
 foodRouter.post("/", middleware.isAuth, async (request, response) => {
@@ -38,7 +34,7 @@ foodRouter.post("/", middleware.isAuth, async (request, response) => {
    const userId = request.user.id
    const user_Id = request.user._id
 
-   console.log("userId Test", userId)
+ 
 
    const food = new Food({
       name: body.name,
@@ -56,7 +52,7 @@ foodRouter.post("/", middleware.isAuth, async (request, response) => {
       date: body.date,
       marke: body.marke,
       veggie: body.veggie,
-      user: userId
+      user: user_Id
    })
 
    const name = body.name
@@ -68,15 +64,14 @@ foodRouter.post("/", middleware.isAuth, async (request, response) => {
       })
    }
 
-   console.log("food", food)
    const newFood = await food.save()
 
-   const user = await User.findById({ user_Id })
-
-   console.log("user", user)
+   // USER UPDATE
+   const user = await User.findById( userId )
    user.foodsAdded = user.foodsAdded.concat(newFood._id)
-
    await user.save()
+
+   // RESPONSE
    response.status(201)
    response.json(newFood)
    

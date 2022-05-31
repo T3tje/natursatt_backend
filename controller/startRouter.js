@@ -1,6 +1,4 @@
 const startRouter = require("express").Router()
-// const User = require("../models/user")
-
 
 startRouter.get("/", (request, response) => {
 
@@ -9,7 +7,6 @@ startRouter.get("/", (request, response) => {
    } else {
       response.send(null)
    }
-   
 })
 
 module.exports = startRouter

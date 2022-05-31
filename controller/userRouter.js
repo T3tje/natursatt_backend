@@ -20,8 +20,9 @@ userRouter.post("/", async (request, response) => {
          error: "E-Mail wird bereits verwendet"
       })
    }
-
+   console.log("hierstop1b")
    if (strongRegex.test(password) === false) {
+      
       return response.status(400).json({
          error: "Das Passwort (mindestens 8 Zeichen lang) sollte enthalten: Einen Großbuchstaben, ein Sonderzeichen (!@#$%^&*), eine Zahl."
       })

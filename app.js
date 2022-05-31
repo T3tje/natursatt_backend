@@ -14,6 +14,7 @@ const logger = require("./utils/logger")
 const sendInBlue = require("./utils/sendinblue")
 const session = require("express-session")
 const passport = require("passport")
+const passwordRouter = require("./controller/passwordRouter.js")
 require("./utils/passport")
 
 logger.info("connecting to MongoDB")
@@ -48,6 +49,7 @@ app.use("/api/food", foodRouter)
 app.use("/api/users", userRouter)
 app.use("/api/login", loginRouter)
 app.use("/api/logout", logoutRouter)
+app.use("/api/password", passwordRouter)
 
 
 app.use(middleware.unknownEndpoint)

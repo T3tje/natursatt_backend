@@ -22,7 +22,7 @@ passwordRouter.post("/", async (request, response) => {
       
       const token = jwt.sign(userDataForToken, secret, { expiresIn: 1000 * 60 * 5 })
      
-      const emailLink = `${config.OWN_URL}/authentication/newpassword?token=${token}&id=${user.id}`
+      const emailLink = `${config.OWN_URL}/authentication/newpassword?frame=${token}?frame=${user.id}`
       /*  const subject = "Passwort wiederherstellen"
       const emailContent = `Bitte klicke auf den folgenden Link um Dein neues Passwort festzulegen: ${emailLink}`
       const htmlContent = "<h1>Test123</h1><p>Ptest123</p>"

@@ -1,6 +1,9 @@
 require("dotenv").config()
 const MongoStore = require("connect-mongo")
 
+const OWN_URL = process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development" 
+   ? "localhost:3000"
+   : "natursatt.de"
 
 const ONE_MONTH = 1000 * 60 * 60 * 24 * 30
 const PORT = process.env.PORT
@@ -36,7 +39,8 @@ module.exports = {
    PORT,
    MONGODB_URI,
    MAIL_API,
-   SESSION_OBJ
+   SESSION_OBJ,
+   OWN_URL
 
 }
 

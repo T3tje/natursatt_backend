@@ -13,8 +13,7 @@ const sendEmail = (address, subject, text) => {
    const tranEmailApi = new Sib.TransactionalEmailsApi()
 
    const sender = {
-      email: "info@natursatt.de",
-      name: "Tilman"
+      email: "info@natursatt.de"
    }
 
    const receivers = [

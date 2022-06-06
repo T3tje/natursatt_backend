@@ -5,6 +5,11 @@ const jwt = require("jsonwebtoken")
 passwordResetCheckRouter.post("/", async (request, response) => {
    const {userId, token} = request.body
 
+   if (!token || !userId) {
+      response.status(400).send()
+      return
+   }
+
    const user = await User.findById( userId )
 
    const secret = process.env.SECRET + user.passwordHash

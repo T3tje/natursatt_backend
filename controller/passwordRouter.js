@@ -32,15 +32,15 @@ passwordRouter.post("/", async (request, response) => {
       @import url('https://fonts.googleapis.com/css2?family=Neucha&family=Secular+One&family=Sigmar+One&display=swap');
       @import url('https://fonts.googleapis.com/css2?family=Neucha&family=Open+Sans:wght@300&family=Secular+One&family=Sigmar+One&display=swap');
       </style>
-      <div style="color:#6aa84f; font-size: 37px; font-family: 'Open Sans', sans-serif; text-align: center;">Passwort zurücksetzen</div>
-      <br/><br/>
-      <div style="color:#554544; font-size: 25px; font-family; 'Neucha', sans-serif; text-align: center;">Bitte klicke auf den folgenden Link um Dein neues Passwort festzulegen:</div>
-      <br/><br/>
-      <a src="${emailLink}">Passwort erneuern</a>`
-
+      <div style=" margin-top: 37px; color:#6aa84f; font-size: 43px; font-family: 'Neucha', Arial, sans-serif; text-align: center;">Passwort zurücksetzen</div>
+      <p style="color:#554544; font-size: 18px; font-family: 'Open Sans', Arial, sans-serif; text-align: center;">Bitte klicke auf den folgenden Link, um Dein neues Passwort festzulegen:</div>
+      <div style="margin-top: 20px; margin-bottom: 100px; text-align: center">
+         <a style="color: #ffffff; text-decoration: none; background-color: #6aa84f; border-style: none; padding: 13px 20px 10px 20px; border-radius: 25px; font-family: 'Neucha', Arial, sans-serif; font-size: 25px" href="${emailLink}">Passwort erneuern</a>
+      </div>`
+      
       sendInBlue.sendEmail(email, subject, htmlContent)
 
-      response.status(200).json(emailLink)
+      response.status(200).send()
       
    }   else {
 

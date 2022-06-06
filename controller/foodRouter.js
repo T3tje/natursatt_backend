@@ -4,6 +4,15 @@ const User = require("../models/user")
 const middleware = require("../utils/middleware")
 const helper = require("../utils/for_testing")
 
+foodRouter.get("/favorites", middleware.isAuth, async (request, response) => {
+ 
+   console.log("request.user", request.user)
+   const user = await User.find({ email: request.user.email}).populate("foodsAdded")
+   response.status(200).json(user)
+   
+   
+})
+
 
 foodRouter.get("/:name", async (request, response) => {
    
@@ -26,6 +35,7 @@ foodRouter.get("/:name", async (request, response) => {
       .limit(10)
 
    response.json(result)
+   
 })
 
 foodRouter.post("/", middleware.isAuth, async (request, response) => {

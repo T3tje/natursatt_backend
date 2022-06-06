@@ -19,6 +19,7 @@ const sendEmail = (address, subject, text) => {
    const receivers = [
       {
          email: address,
+         name: "www.natursatt.de"
       }
    ]
 

@@ -13,7 +13,7 @@ const unknownEndpoint = (request, response) => {
 }
 
 const isAuth = (request, response, next) => {
-   if (request.isAuthenticated) {
+   if (request.isAuthenticated()) {
       next()
    } else {
       response.status(401).json({ error: "nicht authorisiert, bitte neu einloggen"})

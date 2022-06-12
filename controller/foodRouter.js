@@ -4,6 +4,7 @@ const User = require("../models/user")
 const middleware = require("../utils/middleware")
 const helper = require("../utils/for_testing")
 
+
 foodRouter.get("/favorites", middleware.isAuth, async (request, response) => {
  
    console.log("request.user", request.user)
@@ -11,6 +12,41 @@ foodRouter.get("/favorites", middleware.isAuth, async (request, response) => {
    response.status(200).json(user)
    
    
+})
+
+foodRouter.post("/favorites", middleware.isAuth, async (request, response) => {
+   const food_Id = request.body._id
+   const userId = request.user.id
+   const foodToUpdate = await Food.findById(food_Id)
+   const userToUpdate = await User.findById(userId)
+
+   if (foodToUpdate.addedBy.indexOf(userToUpdate._id) === -1) {
+
+      foodToUpdate.addedBy = foodToUpdate.addedBy.concat(userToUpdate._id)
+      userToUpdate.foodsSaved = userToUpdate.foodsSaved.concat(foodToUpdate._id)
+
+      await foodToUpdate.save()
+      await userToUpdate.save()
+
+      response.status(200).json(foodToUpdate)
+   } 
+   
+   else {  
+      
+      const successFood = await Food.findOneAndUpdate({_id: food_Id}, {
+         $pullAll: { addedBy: [userId] }
+      },
+      { new: true }
+      )  
+      
+      await User.findOneAndUpdate({_id: userId}, {
+         $pullAll: { foodsSaved: [food_Id] }
+      },
+      { new: true }
+      
+      )
+      response.status(200).send(successFood)
+   } 
 })
 
 
@@ -56,7 +92,6 @@ foodRouter.post("/", middleware.isAuth, async (request, response) => {
       kcal: body.kcal,
       likes: 0,
       rate: helper.getRate(body),
-      addAmount:0,
       barcode: body.barcode,
       zusatzstoffe: body.zusatzstoffe,
       date: body.date,
@@ -78,6 +113,7 @@ foodRouter.post("/", middleware.isAuth, async (request, response) => {
 
    // USER UPDATE
    const user = await User.findById( userId )
+   console.log(user.foodsAdded)
    user.foodsAdded = user.foodsAdded.concat(newFood._id)
    await user.save()
 

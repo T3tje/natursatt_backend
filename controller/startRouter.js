@@ -3,7 +3,13 @@ const startRouter = require("express").Router()
 startRouter.get("/", (request, response) => {
 
    if (request.isAuthenticated()) {
-      response.status(200).send(request.user.name)
+      
+      console.log(request.user.id)
+      const userObject = {
+         name:request.user.name,
+         id: request.user.id
+      }
+      response.status(200).send(userObject)
    } else {
       response.send(null)
    }

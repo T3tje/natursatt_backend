@@ -1,7 +1,7 @@
 {
   "name": "natursatt_backend",
-  "version": "0.0.7",
-  "description": "\"einfach abnehmen\"",
+  "version": "0.1.0",
+  "description": "\"Fettkiller Lebensmittel\"",
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=production node index.js",

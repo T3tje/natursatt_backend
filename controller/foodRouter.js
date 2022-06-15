@@ -10,8 +10,6 @@ foodRouter.get("/favorites", middleware.isAuth, async (request, response) => {
    console.log("request.user", request.user)
    const user = await User.find({ email: request.user.email}).populate("foodsAdded")
    response.status(200).json(user)
-   
-   
 })
 
 foodRouter.post("/favorites", middleware.isAuth, async (request, response) => {

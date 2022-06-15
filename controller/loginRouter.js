@@ -2,9 +2,13 @@ const loginRouter = require("express").Router()
 const passport = require("passport")
 
 
-loginRouter.post("/", passport.authenticate("local"), async (request, response) => {
-   
-   response.status(200).send(request.user.name)
+loginRouter.post("/", passport.authenticate("local"), async (request, response) => { 
+      
+   const userObject = {
+      name:request.user.name,
+      id: request.user.id
+   }
+   response.status(200).send(userObject)
 })
 
 module.exports = loginRouter

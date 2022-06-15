@@ -8,7 +8,7 @@ const helper = require("../utils/for_testing")
 foodRouter.get("/favorites", middleware.isAuth, async (request, response) => {
  
    console.log("request.user", request.user)
-   const user = await User.find({ email: request.user.email}).populate("foodsAdded")
+   const user = await User.find({ email: request.user.email}).populate("foodsSaved")
    response.status(200).json(user)
 })
 

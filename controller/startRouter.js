@@ -6,7 +6,8 @@ startRouter.get("/", (request, response) => {
       
       const userObject = {
          name:request.user.name,
-         id: request.user.id
+         id: request.user.id,
+         isAdmin: request.user.isAdmin
       }
       response.status(200).send(userObject)
    } else {

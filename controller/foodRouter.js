@@ -12,6 +12,7 @@ foodRouter.get("/favorites", middleware.isAuth, async (request, response) => {
    response.status(200).json(user)
 })
 
+
 foodRouter.post("/favorites", middleware.isAuth, async (request, response) => {
    const food_Id = request.body._id
    const userId = request.user.id
@@ -45,6 +46,17 @@ foodRouter.post("/favorites", middleware.isAuth, async (request, response) => {
       )
       response.status(200).send(successFood)
    } 
+})
+
+foodRouter.get("/checkList", middleware.isAuth, async(request, response) => {
+   if (request.user.isAdmin) {
+      let checkerList = await Food.find({new:true})
+      console.log(checkerList)
+      response.status(200).send(checkerList)
+   }
+   else { 
+      response.status(401).send()
+   }
 })
 
 
@@ -95,7 +107,8 @@ foodRouter.post("/", middleware.isAuth, async (request, response) => {
       date: body.date,
       marke: body.marke,
       veggie: body.veggie,
-      user: user_Id
+      user: user_Id,
+      new: true
    })
 
    const name = body.name

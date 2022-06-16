@@ -16,6 +16,7 @@ const foodSchema = new mongoose.Schema({
    affiLink: {type: String, required: false},
    date: {type: Object},
    veggie: {type: Number, required: true},
+   new: {type: Boolean},
    user: [
       {
          type: mongoose.Schema.Types.ObjectId,

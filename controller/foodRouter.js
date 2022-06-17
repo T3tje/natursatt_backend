@@ -3,6 +3,7 @@ const Food = require("../models/food")
 const User = require("../models/user")
 const middleware = require("../utils/middleware")
 const helper = require("../utils/for_testing")
+const food = require("../models/food")
 
 
 foodRouter.get("/favorites", middleware.isAuth, async (request, response) => {
@@ -46,6 +47,19 @@ foodRouter.post("/favorites", middleware.isAuth, async (request, response) => {
       )
       response.status(200).send(successFood)
    } 
+})
+
+foodRouter.post("/update", middleware.isAuth, async (request, response) => {
+   if (request.user.isAdmin) {
+     
+      const newFood = await Food.updateOne({name:request.body.name},request.body)
+     
+      response.status(201).send(newFood)
+  
+   } else {
+      response.status(401).send()
+   }
+
 })
 
 foodRouter.get("/checkList", middleware.isAuth, async(request, response) => {

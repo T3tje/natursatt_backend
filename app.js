@@ -13,7 +13,7 @@ const passwordResetCheckRouter = require("./controller/passwordResetCheckRouter.
 const mongoose = require("mongoose")
 const cors = require("cors")
 const logger = require("./utils/logger")
-const sendInBlue = require("./utils/sendinblue")
+// const sendInBlue = require("./utils/sendinblue")
 const session = require("express-session")
 const passport = require("passport")
 require("./utils/passport")

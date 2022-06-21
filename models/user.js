@@ -16,6 +16,12 @@ const userSchema = new mongoose.Schema({
          type: mongoose.Schema.Types.ObjectId,
          ref: "Food"
       }
+   ],
+   einkaufsliste: [
+      {
+         type: mongoose.Schema.Types.ObjectId,
+         ref: "Food"
+      }
    ]
 })
 

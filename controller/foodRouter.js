@@ -3,7 +3,7 @@ const Food = require("../models/food")
 const User = require("../models/user")
 const middleware = require("../utils/middleware")
 const helper = require("../utils/for_testing")
-const food = require("../models/food")
+
 
 
 foodRouter.get("/favorites", middleware.isAuth, async (request, response) => {

@@ -9,7 +9,6 @@ const foodSchema = new mongoose.Schema({
    ballast: {type: Number, required: false},
    zucker: {type: Number, required: true},
    rate: {type: String, required: true},
-   likes: {type: Number, required: false},
    kcal: {type: Number, required: true},
    barcode: {type: Number, required: false},
    zusatzstoffe: {type: Boolean, required: false},

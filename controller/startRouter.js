@@ -9,7 +9,7 @@ startRouter.get("/", (request, response) => {
          id: request.user.id,
          isAdmin: request.user.isAdmin
       }
-
+      console.log("Hallo?")
       console.log(request.user.id)
       response.status(200).send(userObject)
    } else {

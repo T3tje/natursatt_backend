@@ -3,7 +3,7 @@ const startRouter = require("express").Router()
 startRouter.get("/", (request, response) => {
 
    console.log("Hallo?")
-   console.log(request.user.id)
+  
 
    if (request.isAuthenticated()) {
       
@@ -12,6 +12,7 @@ startRouter.get("/", (request, response) => {
          id: request.user.id,
          isAdmin: request.user.isAdmin
       }
+      console.log(request.user.id)
       
       response.status(200).send(userObject)
    } else {

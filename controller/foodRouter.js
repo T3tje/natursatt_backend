@@ -3,6 +3,7 @@ const Food = require("../models/food")
 const User = require("../models/user")
 const middleware = require("../utils/middleware")
 const helper = require("../utils/for_testing")
+const sendInBlue = require("../utils/sendinblue")
 
 
 
@@ -52,10 +53,26 @@ foodRouter.post("/favorites", middleware.isAuth, async (request, response) => {
 foodRouter.post("/update", middleware.isAuth, async (request, response) => {
    if (request.user.isAdmin) {
      
-      const newFood = await Food.updateOne({name:request.body.name},request.body)
-     
-      response.status(201).send(newFood)
-  
+      const oldFood = await Food.findById(request.body._id)
+      
+      console.log(oldFood)
+
+      const newFood = await Food.updateOne({_id:request.body._id},request.body)
+
+      const user = await User.findById(oldFood.user[0])
+      const userName = user.name
+
+      if (oldFood.ballast === null) {
+         const subject = "Lebensmittel ist nun verfügbar"
+         const text = `Liebe(r) ${userName}, \n
+         Vielen Dank für das Hinzufügen des Lebensmittels ${oldFood.name}\n
+         Es ist nun vollständig in unserer Datenbank und kann verwendet werden.`
+         
+         sendInBlue.sendEmail(user.email, subject, text)
+      }
+ 
+      response.status(201).send(newFood) 
+ 
    } else {
       response.status(401).send()
    }
@@ -64,7 +81,7 @@ foodRouter.post("/update", middleware.isAuth, async (request, response) => {
 
 foodRouter.get("/checkList", middleware.isAuth, async(request, response) => {
    if (request.user.isAdmin) {
-      let checkerList = await Food.find({new:true})
+      let checkerList = await Food.find({new:true}).sort({ballast: "asc"})
       console.log(checkerList)
       response.status(200).send(checkerList)
    }
@@ -74,22 +91,14 @@ foodRouter.get("/checkList", middleware.isAuth, async(request, response) => {
 })
 
 
-foodRouter.get("/:name", async (request, response) => {
+foodRouter.post("/getfood", async (request, response) => {
    
-   let nameAndNumber = request.params.name
-
-   const position = nameAndNumber.indexOf("~")
-
-   const strToArray = nameAndNumber.split("")
-
-   const nameArr = strToArray.slice(0, position)
-  
-   const amount = parseInt(strToArray.slice(position+1).join(""))
-
-   const name = nameArr.join("")
+   const amount = request.body.amount
+   const name = request.body.name
 
    const result = await Food
       .find({name: { $regex: name, $options: "i" }})
+      .where("ballast").ne(null)
       .sort({name: "asc"})
       .skip(amount)
       .limit(10)
@@ -103,8 +112,16 @@ foodRouter.post("/", middleware.isAuth, async (request, response) => {
    const body = request.body
    const userId = request.user.id
    const user_Id = request.user._id
+   const userName = request.user.name
+   const userEmail = request.user.email
 
- 
+   if (body.ballast === null) {
+      const subject = "Food ohne Ballaststoffe geadded"
+      const text = `${userName} mit der Email: ${userEmail} hat das Lebensmittel: ${body.name} hinzugefügt ohne Ballaststoffangabe`
+      const email = "tilman2013@gmail.com"
+      
+      sendInBlue.sendEmail(email, subject, text)
+   }
 
    const food = new Food({
       name: body.name,
@@ -138,7 +155,6 @@ foodRouter.post("/", middleware.isAuth, async (request, response) => {
 
    // USER UPDATE
    const user = await User.findById( userId )
-   console.log(user.foodsAdded)
    user.foodsAdded = user.foodsAdded.concat(newFood._id)
    await user.save()
 

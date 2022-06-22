@@ -24,7 +24,6 @@ passwordRouter.post("/", async (request, response) => {
      
       const emailLink = `${config.OWN_URL}/authentication/newpassword?frame=${token}?frame=${user.id}`
       
-      // in die EMAIL SCHREIBEN "LINK IST NUR 5 MINUTEN GÜLTIG"
       
       const subject = "Passwort wiederherstellen"
       const htmlContent = `
@@ -33,7 +32,7 @@ passwordRouter.post("/", async (request, response) => {
       @import url('https://fonts.googleapis.com/css2?family=Neucha&family=Open+Sans:wght@300&family=Secular+One&family=Sigmar+One&display=swap');
       </style>
       <div style=" margin-top: 37px; color:#6aa84f; font-size: 43px; font-family: 'Neucha', Arial, sans-serif; text-align: center;">Passwort zurücksetzen</div>
-      <p style="color:#554544; font-size: 18px; font-family: 'Open Sans', Arial, sans-serif; text-align: center;">Bitte klicke auf den folgenden Link, um Dein neues Passwort festzulegen:</div>
+      <p style="color:#554544; font-size: 18px; font-family: 'Open Sans', Arial, sans-serif; text-align: center;">Bitte klicke auf den folgenden Link (5 Minuten gültig), um Dein neues Passwort festzulegen:</div>
       <div style="margin-top: 20px; margin-bottom: 100px; text-align: center">
          <a style="color: #ffffff; text-decoration: none; background-color: #6aa84f; border-style: none; padding: 13px 20px 10px 20px; border-radius: 25px; font-family: 'Neucha', Arial, sans-serif; font-size: 25px" href="${emailLink}">Passwort erneuern</a>
       </div>`

@@ -27,7 +27,7 @@ mongoose.connect(config.MONGODB_URI)
       logger.error("error connecting to MongoDB", error.message)
    })
 
-
+app.enable("trust proxy")
 app.use(cors())
 app.use(express.static("build"))
 app.use(express.json())
@@ -37,6 +37,7 @@ app.use(middleware.requestLogger)
 app.use(session(config.SESSION_OBJ))
 app.use(passport.initialize())
 app.use(passport.session())
+
 
 /* app.use((request, response, next) => {
    console.log("request.session", request.session)

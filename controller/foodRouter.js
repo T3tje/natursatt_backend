@@ -65,7 +65,7 @@ foodRouter.post("/update", middleware.isAuth, async (request, response) => {
       if (oldFood.ballast === null) {
          const subject = "Lebensmittel ist nun verfügbar"
          const text = `Liebe(r) ${userName}, \n
-         Vielen Dank für das Hinzufügen des Lebensmittels ${oldFood.name}\n
+         Vielen Dank für das Hinzufügen des Lebensmittels "${oldFood.name}"\n
          Es ist nun vollständig in unserer Datenbank und kann verwendet werden.`
          
          sendInBlue.sendEmail(user.email, subject, text)

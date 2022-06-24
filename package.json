@@ -9,9 +9,7 @@
     "lint": "eslint .",
     "test": "NODE_ENV=test jest --verbose --runInBand --forceExit",
     "start:test": "NODE_ENV=test node index.js",
-    "build:ui": "rm -rf build && cd ../natursatt_frontend && npm run build && cp -r build ../natursatt_backend && cd ../natursatt_backend",
-    "deploy": "npm run build:ui && npm start"
-
+    "deploy": "cd ../natursatt_frontend && npm run build && cp -r build ../natursatt_backend && rm -rf build && cd ../natursatt_backend && cp ../.natursattEnv/.env ./ && npm start"
   },
   "author": "Tilman Drewke",
   "license": "ISC",

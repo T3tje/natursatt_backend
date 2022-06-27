@@ -27,7 +27,7 @@ mongoose.connect(config.MONGODB_URI)
       logger.error("error connecting to MongoDB", error.message)
    })
 
-app.enable("trust proxy")
+
 app.use(cors())
 app.use(express.static("build"))
 app.use(express.json())

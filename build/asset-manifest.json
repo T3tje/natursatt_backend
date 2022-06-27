@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.b487bc93.css",
+    "main.js": "/static/js/main.7bb1c24b.js",
+    "static/media/Logo_Skala_mit_Männeken_273.png": "/static/media/Logo_Skala_mit_Männeken_273.ee35b5a9c8d7beadf694.png",
+    "index.html": "/index.html",
+    "main.b487bc93.css.map": "/static/css/main.b487bc93.css.map",
+    "main.7bb1c24b.js.map": "/static/js/main.7bb1c24b.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b487bc93.css",
+    "static/js/main.7bb1c24b.js"
+  ]
+}

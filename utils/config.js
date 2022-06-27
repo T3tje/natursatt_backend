@@ -23,6 +23,7 @@ const SECURE_OPT = process.env.NODE_ENV === "development"
 const SESSION_OBJ =  {
    name: "sid",
    resave: false,
+   proxy: true,
    saveUninitialized: false,
    secret:process.env.SECRET,
    store: MongoStore.create({
@@ -31,7 +32,7 @@ const SESSION_OBJ =  {
    cookie: {
       maxAge: SESS_LIFETIME,
       sameSite: true,
-      secure: SECURE_OPT,
+      secure:  SECURE_OPT,
    }
 }
 

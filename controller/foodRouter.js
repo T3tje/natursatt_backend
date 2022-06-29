@@ -6,14 +6,12 @@ const helper = require("../utils/for_testing")
 const sendInBlue = require("../utils/sendinblue")
 
 
-
 foodRouter.get("/favorites", middleware.isAuth, async (request, response) => {
  
    console.log("request.user", request.user)
    const user = await User.find({ email: request.user.email}).populate("foodsSaved")
    response.status(200).json(user)
 })
-
 
 foodRouter.post("/favorites", middleware.isAuth, async (request, response) => {
    const food_Id = request.body._id
@@ -54,8 +52,6 @@ foodRouter.post("/update", middleware.isAuth, async (request, response) => {
    if (request.user.isAdmin) {
      
       const oldFood = await Food.findById(request.body._id)
-      
-      console.log(oldFood)
 
       const newFood = await Food.updateOne({_id:request.body._id},request.body)
 
@@ -131,7 +127,6 @@ foodRouter.post("/", middleware.isAuth, async (request, response) => {
       fett: body.fett,
       zucker: body.zucker,
       kcal: body.kcal,
-      likes: 0,
       rate: helper.getRate(body),
       barcode: body.barcode,
       zusatzstoffe: body.zusatzstoffe,
@@ -139,7 +134,8 @@ foodRouter.post("/", middleware.isAuth, async (request, response) => {
       marke: body.marke,
       veggie: body.veggie,
       user: user_Id,
-      new: true
+      new: true,
+      openfoodfacts: false
    })
 
    const name = body.name

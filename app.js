@@ -1,5 +1,6 @@
 const config = require ("./utils/config.js")
 const express = require("express")
+const path = require("path")
 const middleware = require("./utils/middleware")
 require("express-async-errors")
 const app = express()
@@ -27,9 +28,14 @@ mongoose.connect(config.MONGODB_URI)
       logger.error("error connecting to MongoDB", error.message)
    })
 
-
 app.use(cors())
-app.use(express.static("build"))
+app.use(express.static(path.join(__dirname, "build")))
+
+
+app.get("/*", function (req, res) {
+   res.sendFile(path.join(__dirname, "build", "index.html"))
+})
+
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(middleware.requestLogger)

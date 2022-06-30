@@ -29,16 +29,17 @@ Mongoclient.connect(url, function(err, db) {
                zucker:item.nutriments.sugars_100g,
             }
 
-            db.createUser(
+            /*    db.createUser(
                {
                   user: "tilman",
                   pwd: "K4k4k4n4k!",
                   roles: [ 
-                     { role: "userAdminAnyDatabase", db:"natursatt" },
+                     { role: "userAdminAnyDatabase", db:"admin" },
                      "readWriteAnyDatabase"
                   ]
                }
-            )
+            ) */
+            return {
                name: item.product_name,
                kh: item.nutriments.carbohydrates_100g,
                fett: item.nutriments.fat_100g,

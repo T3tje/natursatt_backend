@@ -31,7 +31,7 @@ const SESSION_OBJ =  {
    }),
    cookie: {
       maxAge: SESS_LIFETIME,
-      sameSite: "none",
+      sameSite: true,
       secure:  SECURE_OPT,
    }
 }

@@ -32,7 +32,7 @@ const SESSION_OBJ =  {
    cookie: {
       maxAge: SESS_LIFETIME,
       sameSite: true,
-      secure:  SECURE_OPT,
+      secure:  true,
    }
 }
 

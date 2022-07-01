@@ -1,6 +1,5 @@
 const config = require ("./utils/config.js")
 const express = require("express")
-const path = require("path")
 const middleware = require("./utils/middleware")
 require("express-async-errors")
 const app = express()
@@ -9,6 +8,7 @@ const userRouter = require("./controller/userRouter")
 const loginRouter = require("./controller/loginRouter")
 const logoutRouter = require("./controller/logoutRouter")
 const startRouter = require("./controller/startRouter")
+const authenticationRouter = require("./controller/authenticationRouter.js")
 const passwordRouter = require("./controller/passwordRouter.js")
 const passwordResetCheckRouter = require("./controller/passwordResetCheckRouter.js")
 const mongoose = require("mongoose")
@@ -29,17 +29,10 @@ mongoose.connect(config.MONGODB_URI)
    })
 
 app.use(cors())
-app.use(express.static(path.join(__dirname, "build")))
-
-
-app.get("/*", function (req, res) {
-   res.sendFile(path.join(__dirname, "build", "index.html"))
-})
-
+app.use(express.static("build"))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(middleware.requestLogger)
-
 app.use(session(config.SESSION_OBJ))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -51,7 +44,7 @@ app.use(passport.session())
    next()
 }) */
 
-
+app.use("/authentication", authenticationRouter)
 app.use("/api/checkauth", startRouter)
 app.use("/api/food", foodRouter)
 app.use("/api/users", userRouter)

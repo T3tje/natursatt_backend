@@ -8,7 +8,6 @@ const userRouter = require("./controller/userRouter")
 const loginRouter = require("./controller/loginRouter")
 const logoutRouter = require("./controller/logoutRouter")
 const startRouter = require("./controller/startRouter")
-const authenticationRouter = require("./controller/authenticationRouter.js")
 const passwordRouter = require("./controller/passwordRouter.js")
 const passwordResetCheckRouter = require("./controller/passwordResetCheckRouter.js")
 const mongoose = require("mongoose")
@@ -44,7 +43,7 @@ app.use(passport.session())
    next()
 }) */
 
-app.use("/authentication", authenticationRouter)
+
 app.use("/api/checkauth", startRouter)
 app.use("/api/food", foodRouter)
 app.use("/api/users", userRouter)

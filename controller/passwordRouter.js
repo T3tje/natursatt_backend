@@ -22,7 +22,7 @@ passwordRouter.post("/", async (request, response) => {
       
       const token = jwt.sign(userDataForToken, secret, { expiresIn: 60 * 5})  // 5 Minuten
      
-      const emailLink = `${config.OWN_URL}/authentication/newpassword?frame=${token}?frame=${user.id}`
+      const emailLink = `${config.OWN_URL}/#/authentication/newpassword?frame=${token}?frame=${user.id}`
       
       
       const subject = "Passwort wiederherstellen"

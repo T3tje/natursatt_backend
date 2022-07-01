@@ -18,7 +18,7 @@ const SESS_LIFETIME = ONE_MONTH
 
 const SECURE_OPT = process.env.NODE_ENV === "development"
    ? false
-   : false
+   : true
 
 const SESSION_OBJ =  {
    name: "sid",

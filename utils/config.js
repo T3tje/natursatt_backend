@@ -3,7 +3,7 @@ const MongoStore = require("connect-mongo")
 
 const OWN_URL = process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development" 
    ? "localhost:3000"
-   : "natursatt.de"
+   : "app.natursatt.de"
 
 const ONE_MONTH = 1000 * 60 * 60 * 24 * 30
 const PORT = process.env.PORT
@@ -32,7 +32,7 @@ const SESSION_OBJ =  {
    cookie: {
       maxAge: SESS_LIFETIME,
       sameSite: true,
-      secure:  false,
+      secure:  SECURE_OPT,
    }
 }
 

@@ -56,17 +56,20 @@ foodRouter.post("/update", middleware.isAuth, async (request, response) => {
       const newFood = await Food.updateOne({_id:request.body._id},request.body)
 
       const user = await User.findById(oldFood.user[0])
-      const userName = user.name
+      
+      if (user) {
+         const userName = user.name
 
-      if (oldFood.ballast === null) {
-         const subject = "Lebensmittel ist nun verfügbar"
-         const text = `Liebe(r) ${userName}, \n
-         Vielen Dank für das Hinzufügen des Lebensmittels "${oldFood.name}"\n
-         Es ist nun vollständig in unserer Datenbank und kann verwendet werden.`
-         
-         sendInBlue.sendEmail(user.email, subject, text)
+         if (oldFood.ballast === null) {
+            const subject = "Lebensmittel ist nun verfügbar"
+            const text = `Liebe(r) ${userName}, \n
+            Vielen Dank für das Hinzufügen des Lebensmittels "${oldFood.name}"\n
+            Es ist nun vollständig in unserer Datenbank und kann verwendet werden.`
+            
+            sendInBlue.sendEmail(user.email, subject, text)
+         }
       }
- 
+     
       response.status(201).send(newFood) 
  
    } else {
@@ -78,7 +81,6 @@ foodRouter.post("/update", middleware.isAuth, async (request, response) => {
 foodRouter.get("/checkList", middleware.isAuth, async(request, response) => {
    if (request.user.isAdmin) {
       let checkerList = await Food.find({new:true}).sort({ballast: "asc"})
-      console.log(checkerList)
       response.status(200).send(checkerList)
    }
    else { 
@@ -134,8 +136,7 @@ foodRouter.post("/", middleware.isAuth, async (request, response) => {
       marke: body.marke,
       veggie: body.veggie,
       user: user_Id,
-      new: true,
-      openfoodfacts: false
+      new: true
    })
 
    const name = body.name

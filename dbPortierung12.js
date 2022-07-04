@@ -1,35 +1,105 @@
-const Mongoclient = require("mongodb").MongoClient
+
 const helper = require("./utils/for_testing")
+const mongoose = require("mongoose")
+const Get = require("./models/get")
+const Food = require("./models/food")
 
-const url = "mongodb://localhost:27017/"
-console.log("connecting...")
-Mongoclient.connect(url, function(err, db) {
-   if (err) throw err
-   const dbo = db.db("natursatt")
-   const query = {lang: "de"}
+const url = "mongodb://tilman:K4k4k4n4k!@localhost:27017/natursatt?authSource=admin"
+console.log("connecting...")     
 
-   dbo.collection("openfoodfacts").find(query).limit(100).toArray((err, result) => {
-      if (err) throw err
+const mach = async () => {
+   await mongoose.connect(url)
+   console.log("connected")
+   const alle = await Get.find({})
+
+   const saveArray = alle.map(item => {
       
-      const array = result.map(item => {
-         if (item.product_name 
-               && item.nutriments.carbohydrates_100g
-               && item.nutriments.fat_100g
-               && item.nutriments.proteins_100g
-               && item.nutriments.energy_value
-               && item.nutriments.fiber
-               && item.nutriments.sugars_100g
-         ) {
+      const ew = Number(item.Protein.replace(",","."))
+      const ballast = Number(item.Ballastst.replace(",","."))
+      const kcal = Number(item.KCAL.replace(",","."))
+      const fett = Number(item.Fett.replace(",","."))
+      const zucker = Number(item.ZuckAlc.replace(",","."))
+      const kh = Number(item.KH.replace(",","."))
+               
+      const body = {
+         ew: ew,            
+         ballast: ballast,
+         kcal:  kcal,
+         fett: fett,
+         zucker: zucker
+      }
+          
+      return {
+         name: item.Produkt,
+         kh: kh,
+         fett: fett,
+         ew: ew,
+         kcal: kcal,
+         ballast: ballast,
+         zucker:zucker,
+         new:true,
+         rate: helper.getRate(body),
+         zusatzstoffe: item.Zusatzstoffe === "!" ? true : false,
+         date: new Date(),
+         veggie: 0,
+      } 
+   })
+   
+   console.log(saveArray)
+   await Food.insertMany(saveArray)
 
-            const body = {
-               ew: item.nutriments.proteins_100g,
-               ballast: item.nutriments.fiber,
-               kcal: item.nutriments.energy_value,
-               fett: item.nutriments.fat_100g,
-               zucker:item.nutriments.sugars_100g,
-            }
+   await mongoose.connection.close()
+   console.log("closed")
+   
 
-            /*    db.createUser(
+  
+}
+
+mach()
+  
+
+
+
+/* const array = result.map(item => {
+      
+   const ew = Number(item.Protein.replace(",","."))
+   const ballast = Number(item.Ballastst[""].replace(",","."))
+   const kcal = Number(item.KCAL.replace(",","."))
+   const fett = Number(item.Fett.replace(",","."))
+   const zucker = Number(item["Zuck+Alc"].replace(",","."))
+   const kh = Number(item.KH.replace(",","."))
+            
+   const body = {
+      ew: ew,            
+      ballast: ballast,
+      kcal:  kcal,
+      fett: fett,
+      zucker: zucker
+   }
+       
+   return {
+      name: item.Produkt,
+      kh: kh,
+      fett: fett,
+      ew: ew,
+      kcal: kcal,
+      ballast: ballast,
+      zucker:zucker,
+      new:true,
+      rate: helper.getRate(body),
+      zusatzstoffe: item.zusatzstoffe === "!" ? true : false,
+      date: new Date(),
+      veggie: 0,
+   } 
+})
+
+   
+console.log(array)
+ */
+
+/* console.log(array) */
+
+/*    db.createUser(
                {
                   user: "tilman",
                   pwd: "K4k4k4n4k!",
@@ -39,21 +109,3 @@ Mongoclient.connect(url, function(err, db) {
                   ]
                }
             ) */
-            return {
-               name: item.product_name,
-               kh: item.nutriments.carbohydrates_100g,
-               fett: item.nutriments.fat_100g,
-               ew: item.nutriments.proteins_100g,
-               kcal: item.nutriments.energy_value,
-               ballast: item.nutriments.fiber,
-               zucker:item.nutriments.sugars_100g,
-               openfoodfacts: true,
-               new:false,
-               rate: helper.getRate(body)
-            }   
-         }
-      }).filter(item => item)
-      console.log(array)
-      db.close()
-   })
-})

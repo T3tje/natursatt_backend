@@ -16,7 +16,6 @@ const foodSchema = new mongoose.Schema({
    date: {type: Object},
    veggie: {type: Number, required: true},
    new: {type: Boolean},
-   openfoodfacts: {type: Boolean},
    ballastCheck: {type: Boolean},
    user: [
       {
@@ -39,4 +38,4 @@ foodSchema.set("toJSON", {
    }
 })
 
-module.exports = mongoose.model("Food", foodSchema)
+module.exports = mongoose.model("Food", foodSchema, "foods")

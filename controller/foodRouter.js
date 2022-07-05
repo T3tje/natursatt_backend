@@ -99,7 +99,7 @@ foodRouter.post("/getfood", async (request, response) => {
       .where("ballast").ne(null)
       .sort({name: "asc"})
       .skip(amount)
-      .limit(10)
+      .limit(7)
 
    response.json(result)
    

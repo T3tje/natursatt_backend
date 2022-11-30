@@ -42,6 +42,5 @@ module.exports = {
    MAIL_API,
    SESSION_OBJ,
    OWN_URL
-
 }
 

@@ -50,9 +50,6 @@ const mach = async () => {
 
    await mongoose.connection.close()
    console.log("closed")
-   
-
-  
 }
 
 mach()

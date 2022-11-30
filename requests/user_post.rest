@@ -4,6 +4,6 @@ Content-Type: application/json
 {
     "name": "Tetje",
     "email": "tilman@natursatt.de",
-    "password": "K4k4k4n4k!"
+    "password": "Ktestpw"
     
 }

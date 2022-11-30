@@ -2,6 +2,7 @@ const startRouter = require("express").Router()
 
 startRouter.get("/", (request, response) => {
 
+   console.log(request.headers["x-forwarded-for"])
    if (request.isAuthenticated()) {
       
       const userObject = {

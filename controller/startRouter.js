@@ -1,6 +1,17 @@
 const startRouter = require("express").Router()
+const TrackedEvent = require("../models/trackedevents")
 
-startRouter.get("/", (request, response) => {
+startRouter.get("/", async (request, response) => {
+  
+   const event = TrackedEvent({
+      art: "start",
+      date: Date(),
+   })
+  
+   await event.save()
+  
+   console.log("Neuer Seitenbesucher")
+
    if (request.isAuthenticated()) {
       const userObject = {
          name: request.user.name,

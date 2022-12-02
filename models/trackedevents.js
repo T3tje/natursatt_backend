@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
 const trackedEventSchema = new mongoose.Schema({
-   art: {type: String, required: true, unique: true},
+   art: {type: String, required: true},
    date: {type: Date},
    ip: {type: String, required: false}
 })
